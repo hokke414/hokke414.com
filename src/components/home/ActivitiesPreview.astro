@@ -1,0 +1,53 @@
+---
+import ActivityCard from '../ActivityCard.astro';
+import { getAllActivities } from '../../utils/content';
+
+const activities = (await getAllActivities())
+  .filter((a) => a.data.featured)
+  .slice(0, 3);
+---
+
+{activities.length > 0 && (
+  <section aria-labelledby="activities-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="activities-title" class="section-title">Activities</h2>
+        <a href="/activities" class="view-all">すべて見る →</a>
+      </div>
+      <div class="grid">
+        {activities.map((a) => (
+          <ActivityCard
+            title={a.data.title}
+            description={a.data.description}
+            date={a.data.date}
+            endDate={a.data.endDate}
+            type={a.data.type}
+            role={a.data.role}
+            links={a.data.links}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  section { padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+
+  .view-all { font-size: 0.875rem; font-weight: 500; color: var(--accent); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+</style>

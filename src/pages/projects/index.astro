@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getAllProjects, allTags } from '../../utils/content';
+
+const projects = await getAllProjects();
+const tags = allTags(projects);
+---
+
+<BaseLayout
+  title="Projects"
+  description="hokke414の制作物一覧。個人開発プロジェクト・OSS活動などを掲載しています。"
+>
+  <div class="page-wrap">
+    <div class="container">
+      <div class="page-header">
+        <h1>Projects</h1>
+        <p>個人開発・OSS 活動などの制作物一覧です。</p>
+      </div>
+
+      {tags.length > 0 && (
+        <div class="tag-bar" role="group" aria-label="タグで絞り込み">
+          <button class="filter-btn active" data-tag="">すべて</button>
+          {tags.map((t) => (
+            <button class="filter-btn" data-tag={t}>{t}</button>
+          ))}
+        </div>
+      )}
+
+      {projects.length === 0 ? (
+        <p class="empty">プロジェクトがまだありません。</p>
+      ) : (
+        <div class="grid" id="projects-grid">
+          {projects.map((p) => (
+            <div class="grid-item" data-tags={p.data.tags.join(',')}>
+              <ProjectCard
+                id={p.id}
+                title={p.data.title}
+                description={p.data.description}
+                tags={p.data.tags}
+                github={p.data.github}
+                demo={p.data.demo}
+                status={p.data.status}
+                featured={p.data.featured}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items = document.querySelectorAll<HTMLElement>('.grid-item');
+
+  btns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag ?? '';
+      btns.forEach((b) => b.classList.toggle('active', b === btn));
+      items.forEach((item) => {
+        const tags = item.dataset.tags ?? '';
+        const show = !tag || tags.split(',').includes(tag);
+        item.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<style>
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: 2em;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+  }
+
+  .filter-btn:hover { color: var(--fg); border-color: var(--fg-muted); }
+
+  .filter-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    padding-bottom: 5rem;
+  }
+
+  .grid-item {
+    display: flex;
+  }
+
+  .grid-item > :global(.card) {
+    flex: 1;
+  }
+
+  .empty { color: var(--fg-muted); padding: 3rem 0; }
+</style>

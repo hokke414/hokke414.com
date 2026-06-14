@@ -1,0 +1,126 @@
+---
+import { formatDate } from '../utils/content';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  endDate?: Date;
+  type: 'community' | 'event' | 'oss' | 'hackathon' | 'other';
+  role?: string;
+  links?: { label: string; url: string }[];
+}
+
+const { title, description, date, endDate, type, role, links = [] } = Astro.props;
+
+const typeLabel: Record<Props['type'], string> = {
+  community: 'コミュニティ',
+  event: 'イベント',
+  oss: 'OSS',
+  hackathon: 'ハッカソン',
+  other: 'その他',
+};
+
+const periodStr = endDate
+  ? `${formatDate(date)} – ${formatDate(endDate)}`
+  : formatDate(date);
+---
+
+<article class="card">
+  <div class="card-label">
+    <span class:list={['type-badge', `type-${type}`]}>{typeLabel[type]}</span>
+    <time class="date" datetime={date.toISOString()}>{periodStr}</time>
+  </div>
+  <h3 class="card-title">{title}</h3>
+  {role && <p class="role">{role}</p>}
+  <p class="card-desc">{description}</p>
+  {links.length > 0 && (
+    <div class="card-links">
+      {links.map((l) => (
+        <a href={l.url} target="_blank" rel="noopener noreferrer" class="ext-link">
+          {l.label} ↗
+        </a>
+      ))}
+    </div>
+  )}
+</article>
+
+<style>
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--canvas);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    transition: border-color var(--transition);
+  }
+
+  .card:hover { border-color: var(--fg-subtle); }
+
+  .card-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .type-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .type-community { background: #dbeafe; color: #1e40af; }
+  .type-event     { background: #fce7f3; color: #9d174d; }
+  .type-oss       { background: #dcfce7; color: #14532d; }
+  .type-hackathon { background: #fef9c3; color: #713f12; }
+  .type-other     { background: var(--canvas-subtle); color: var(--fg-muted); }
+
+  :root.dark .type-community { background: #1c2e4a; color: #93c5fd; }
+  :root.dark .type-event     { background: #3b1728; color: #f9a8d4; }
+  :root.dark .type-oss       { background: #14291e; color: #86efac; }
+  :root.dark .type-hackathon { background: #2d2013; color: #fde047; }
+
+  .date {
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.4;
+  }
+
+  .role {
+    font-size: 0.875rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+    line-height: 1.6;
+  }
+
+  .card-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  .ext-link {
+    font-size: 0.8125rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+</style>

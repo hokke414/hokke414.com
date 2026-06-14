@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import { timeline } from '../data/resume';
+---
+
+<BaseLayout
+  title="Resume"
+  description="hokke414の経歴。学歴・活動歴・資格・受賞歴をタイムライン形式で掲載しています。"
+>
+  <div class="page-wrap">
+    <div class="container">
+      <div class="page-header">
+        <h1>Resume</h1>
+        <p>学歴・活動歴・資格・受賞歴などの経歴です。</p>
+      </div>
+
+      <div class="resume-content">
+        <Timeline entries={timeline} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .resume-content {
+    max-width: 600px;
+    padding-bottom: 5rem;
+  }
+</style>

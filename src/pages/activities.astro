@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ActivityCard from '../components/ActivityCard.astro';
+import { getAllActivities } from '../utils/content';
+
+const activities = await getAllActivities();
+---
+
+<BaseLayout
+  title="Activities"
+  description="hokke414のコミュニティ活動一覧。イベント登壇・勉強会・ハッカソンなどの活動記録です。"
+>
+  <div class="page-wrap">
+    <div class="container">
+      <div class="page-header">
+        <h1>Activities</h1>
+        <p>技術コミュニティへの参加・登壇・運営などの活動記録です。</p>
+      </div>
+
+      {activities.length === 0 ? (
+        <p class="empty">活動記録がまだありません。</p>
+      ) : (
+        <div class="grid">
+          {activities.map((a) => (
+            <div class="grid-item">
+              <ActivityCard
+                title={a.data.title}
+                description={a.data.description}
+                date={a.data.date}
+                endDate={a.data.endDate}
+                type={a.data.type}
+                role={a.data.role}
+                links={a.data.links}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    padding-bottom: 5rem;
+  }
+
+  .grid-item {
+    display: flex;
+  }
+
+  .grid-item > :global(.card) {
+    flex: 1;
+  }
+
+  .empty { color: var(--fg-muted); padding: 3rem 0; }
+</style>

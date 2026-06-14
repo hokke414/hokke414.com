@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getPublishedPosts } from '../../utils/content';
+import { fetchZennArticles } from '../../utils/zenn';
+
+type WritingItem = {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  category?: string;
+};
+
+const localPosts = await getPublishedPosts();
+const zennPosts = await fetchZennArticles('hokke414');
+
+const localItems: WritingItem[] = localPosts.map((p) => ({
+  href: `/blog/${p.id}`,
+  title: p.data.title,
+  description: p.data.description,
+  pubDate: p.data.pubDate,
+  tags: p.data.tags,
+  category: p.data.category,
+}));
+
+const allItems: WritingItem[] = [...localItems, ...zennPosts].sort(
+  (a, b) => b.pubDate.getTime() - a.pubDate.getTime(),
+);
+
+const allTags = [...new Set(allItems.flatMap((i) => i.tags))].sort((a, b) =>
+  a.localeCompare(b, 'ja'),
+);
+---
+
+<BaseLayout
+  title="Blog"
+  description="hokke414の技術ブログ。Web開発・個人開発・ツールなどの記事を掲載しています。"
+>
+  <div class="page-wrap">
+    <div class="container">
+      <div class="page-header">
+        <h1>Blog</h1>
+        <p>技術記事・開発メモを掲載しています。</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar-top">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="記事を検索..."
+            aria-label="記事を検索"
+            class="search-input"
+          />
+          {allTags.length > 0 && (
+            <button
+              id="tag-toggle-btn"
+              class="tag-toggle-btn"
+              aria-expanded="false"
+              aria-controls="tag-panel"
+              type="button"
+            >
+              <span id="tag-toggle-label">タグ検索</span>
+              <svg id="tag-toggle-chevron" class="chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          )}
+        </div>
+
+        {allTags.length > 0 && (
+          <div id="tag-panel" class="tag-panel" hidden>
+            <div class="tag-bar" role="group" aria-label="タグで絞り込み">
+              <button class="filter-btn active" data-tag="" type="button">すべて</button>
+              {allTags.map((t) => (
+                <button class="filter-btn" data-tag={t} type="button">{t}</button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {allItems.length === 0 ? (
+        <p class="empty">記事がまだありません。</p>
+      ) : (
+        <div class="grid" id="blog-grid">
+          {allItems.map((item) => (
+            <div
+              class="grid-item"
+              data-tags={item.tags.join(',')}
+              data-title={item.title.toLowerCase()}
+              data-desc={item.description.toLowerCase()}
+            >
+              <ArticleCard
+                href={item.href}
+                title={item.title}
+                description={item.description}
+                pubDate={item.pubDate}
+                tags={item.tags}
+                category={item.category}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p id="no-results" class="empty" style="display:none">該当する記事が見つかりませんでした。</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const tagToggleBtn = document.getElementById('tag-toggle-btn') as HTMLButtonElement | null;
+  const tagPanel = document.getElementById('tag-panel') as HTMLElement | null;
+  const tagToggleLabel = document.getElementById('tag-toggle-label')!;
+  const tagToggleChevron = document.getElementById('tag-toggle-chevron')!;
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items = document.querySelectorAll<HTMLElement>('.grid-item');
+  const noResults = document.getElementById('no-results')!;
+
+  let activeTag = '';
+  let query = '';
+
+  // タグパネルの開閉
+  tagToggleBtn?.addEventListener('click', () => {
+    const expanded = tagToggleBtn.getAttribute('aria-expanded') === 'true';
+    tagToggleBtn.setAttribute('aria-expanded', String(!expanded));
+    if (tagPanel) tagPanel.hidden = expanded;
+    tagToggleChevron.style.transform = expanded ? '' : 'rotate(180deg)';
+  });
+
+  function applyFilters() {
+    let visible = 0;
+    items.forEach((item) => {
+      const tags = item.dataset.tags ?? '';
+      const title = item.dataset.title ?? '';
+      const desc = item.dataset.desc ?? '';
+      const matchTag = !activeTag || tags.split(',').includes(activeTag);
+      const matchSearch = !query || title.includes(query) || desc.includes(query);
+      const show = matchTag && matchSearch;
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    noResults.style.display = visible === 0 ? '' : 'none';
+  }
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeTag = btn.dataset.tag ?? '';
+      filterBtns.forEach((b) => b.classList.toggle('active', b === btn));
+
+      // アクティブなタグをボタンラベルに反映
+      if (tagToggleLabel) {
+        tagToggleLabel.textContent = activeTag ? `タグ: ${activeTag}` : 'タグ検索';
+      }
+
+      applyFilters();
+    });
+  });
+
+  searchInput?.addEventListener('input', () => {
+    query = searchInput.value.toLowerCase().trim();
+    applyFilters();
+  });
+</script>
+
+<style>
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .toolbar-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    color: var(--fg);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.875rem;
+    width: 100%;
+    max-width: 320px;
+    transition: border-color var(--transition);
+    outline: none;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--fg-subtle); }
+
+  /* タグ検索トグルボタン */
+  .tag-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--fg-muted);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.85rem;
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+    white-space: nowrap;
+  }
+
+  .tag-toggle-btn:hover {
+    color: var(--fg);
+    border-color: var(--fg-muted);
+    background: var(--canvas-subtle);
+  }
+
+  .tag-toggle-btn[aria-expanded="true"] {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+  }
+
+  .chevron {
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+
+  /* タグパネル */
+  .tag-panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    background: var(--canvas-subtle);
+  }
+
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: 2em;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+  }
+
+  .filter-btn:hover { color: var(--fg); border-color: var(--fg-muted); }
+
+  .filter-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    padding-bottom: 5rem;
+  }
+
+  .grid-item {
+    display: flex;
+  }
+
+  .grid-item > :global(.card) {
+    flex: 1;
+  }
+
+  .empty { color: var(--fg-muted); padding: 3rem 0; }
+</style>

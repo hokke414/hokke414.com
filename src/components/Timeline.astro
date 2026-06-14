@@ -1,0 +1,136 @@
+---
+import type { TimelineEntry } from '../data/resume';
+
+interface Props {
+  entries: TimelineEntry[];
+}
+
+const { entries } = Astro.props;
+
+const typeLabel: Record<TimelineEntry['type'], string> = {
+  education: '学歴',
+  work: '職歴',
+  award: '受賞',
+  certification: '資格',
+  organization: '組織',
+};
+---
+
+<ol class="timeline" role="list">
+  {entries.map((entry) => (
+    <li class="timeline-item">
+      <div class="timeline-marker" aria-hidden="true"></div>
+      <div class="timeline-body">
+        <div class="timeline-meta">
+          <span class:list={['tl-badge', `tl-${entry.type}`]}>{typeLabel[entry.type]}</span>
+          <span class="tl-period">{entry.period}</span>
+        </div>
+        <h3 class="tl-title">{entry.title}</h3>
+        {entry.organization && <p class="tl-org">{entry.organization}</p>}
+        {entry.description && <p class="tl-desc">{entry.description}</p>}
+        {entry.url && (
+          <a class="tl-url" href={entry.url} target="_blank" rel="noopener noreferrer">{entry.url}</a>
+        )}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 2.5rem 1.5rem;
+  }
+
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-marker {
+    position: absolute;
+    left: calc(-1.5rem - 5px);
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--canvas);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  .timeline-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tl-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.1rem 0.45rem;
+    border-radius: 2em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tl-education   { background: #dbeafe; color: #1e40af; }
+  .tl-work        { background: #dcfce7; color: #14532d; }
+  .tl-award       { background: #fef9c3; color: #713f12; }
+  .tl-certification { background: #fce7f3; color: #9d174d; }
+  .tl-organization  { background: #ede9fe; color: #5b21b6; }
+
+  :root.dark .tl-education    { background: #1c2e4a; color: #93c5fd; }
+  :root.dark .tl-work         { background: #14291e; color: #86efac; }
+  :root.dark .tl-award        { background: #2d2013; color: #fde047; }
+  :root.dark .tl-certification { background: #3b1728; color: #f9a8d4; }
+  :root.dark .tl-organization  { background: #2e1a4a; color: #c4b5fd; }
+
+  .tl-period {
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+  }
+
+  .tl-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.4;
+  }
+
+  .tl-org {
+    font-size: 0.875rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .tl-desc {
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+    line-height: 1.6;
+  }
+
+  .tl-url {
+    font-size: 0.8125rem;
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  .tl-url:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import SocialLinks from '../SocialLinks.astro';
+---
+
+<section class="hero" aria-label="自己紹介">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1 class="name">hokke414</h1>
+        <div class="roles">
+          <span>Computer Science Student</span>
+          <span aria-hidden="true">·</span>
+          <span>Web Developer</span>
+          <span aria-hidden="true">·</span>
+          <span>Community Builder</span>
+        </div>
+        <p class="bio">
+          情報系の大学でコンピュータサイエンスを学ぶ学生エンジニアです。<br>Web開発・個人開発や、コミュニティへの参加、活動を通じて継続的に学びをアウトプットしています。
+        </p>
+        <SocialLinks />
+      </div>
+      <div class="hero-avatar" aria-hidden="true">
+        <img
+          src="/avatar.png"
+          alt="hokke414 のプロフィール画像"
+          width="160"
+          height="160"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: calc(64px + 4rem) 0 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+
+  .hero-text {
+    flex: 1;
+    min-width: 0;
+    max-width: 600px;
+  }
+
+  .name {
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+  }
+
+  .roles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+    color: var(--fg-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+  }
+
+  .bio {
+    color: var(--fg-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-avatar {
+    flex-shrink: 0;
+  }
+
+  .hero-avatar img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    object-fit: cover;
+    background: var(--canvas-subtle);
+  }
+
+  @media (max-width: 600px) {
+    .hero-inner {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .hero-avatar img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+</style>

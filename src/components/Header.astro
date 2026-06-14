@@ -1,0 +1,182 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/activities', label: 'Activities' },
+  { href: '/resume', label: 'Resume' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const path = Astro.url.pathname;
+---
+
+<header id="site-header">
+  <div class="inner">
+    <a href="/" class="logo" aria-label="hokke414.com ホームへ">hokke414</a>
+
+    <nav aria-label="メインナビゲーション" class="nav-desktop">
+      {navLinks.map((l) => (
+        <a
+          href={l.href}
+          class:list={['nav-link', { active: path === l.href || path.startsWith(l.href + '/') }]}
+          aria-current={path === l.href ? 'page' : undefined}
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-right">
+      <ThemeToggle />
+      <details class="mobile-menu">
+        <summary aria-label="メニューを開く" role="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </summary>
+        <nav class="nav-mobile" aria-label="モバイルナビゲーション">
+          {navLinks.map((l) => (
+            <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 64px;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--fg);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }
+
+  .logo:hover { text-decoration: none; opacity: 0.8; }
+
+  .nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: color var(--transition), background var(--transition);
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    color: var(--fg);
+    background: var(--canvas-subtle);
+    text-decoration: none;
+  }
+
+  .nav-link.active {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Mobile */
+  .mobile-menu { display: none; position: relative; }
+
+  .mobile-menu summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--fg-muted);
+    background: var(--canvas);
+    transition: background var(--transition);
+  }
+
+  .mobile-menu summary::-webkit-details-marker { display: none; }
+  .mobile-menu summary:hover { background: var(--canvas-subtle); }
+
+  .nav-mobile {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 200px;
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .nav-mobile a {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    padding: 0.5rem 0.75rem;
+    border-radius: calc(var(--radius) - 1px);
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .nav-mobile a:hover, .nav-mobile a[aria-current="page"] {
+    background: var(--canvas-subtle);
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .nav-desktop { display: none; }
+    .mobile-menu { display: block; }
+  }
+</style>

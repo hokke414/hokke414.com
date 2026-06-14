@@ -1,0 +1,277 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { socials } from '../data/resume';
+---
+
+<BaseLayout
+  title="Contact"
+  description="hokke414への連絡・お問い合わせはこちら。フォームまたは各種SNSでご連絡いただけます。"
+>
+  <div class="page-wrap">
+    <div class="container">
+      <div class="page-header">
+        <h1>Contact</h1>
+        <p>お気軽にご連絡ください。フォームまたは各 SNS からどうぞ。</p>
+      </div>
+
+      <div class="layout">
+        <!-- お問い合わせフォーム -->
+        <section class="form-section" aria-labelledby="form-title">
+          <h2 id="form-title">フォームでのお問い合わせ</h2>
+
+          <form id="contact-form" novalidate>
+            <div class="field">
+              <label for="name">お名前 <span class="required" aria-label="必須">*</span></label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                placeholder="山田 太郎"
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="field">
+              <label for="email">メールアドレス <span class="required" aria-label="必須">*</span></label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="field">
+              <label for="message">メッセージ <span class="required" aria-label="必須">*</span></label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="6"
+                placeholder="お問い合わせ内容を入力してください"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">送信する</button>
+
+            <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <!-- 連絡先リスト -->
+        <aside class="links-section" aria-labelledby="links-title">
+          <h2 id="links-title">その他の連絡先</h2>
+          <ul class="contact-list" role="list">
+            {socials.map((s) => (
+              <li>
+                <a
+                  href={s.url}
+                  target={s.url.startsWith('mailto') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  class="contact-item"
+                >
+                  <span class="contact-label">{s.label}</span>
+                  <span class="contact-value">{s.url.replace('mailto:', '')}</span>
+                  <span class="contact-arrow" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const status = document.getElementById('form-status')!;
+
+  function setStatus(msg: string, type: 'success' | 'error' | '') {
+    status.textContent = msg;
+    status.className = `form-status${type ? ` form-status--${type}` : ''}`;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim();
+
+    if (!name || !email || !message) {
+      setStatus('すべての項目を入力してください。', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+    setStatus('', '');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus('お問い合わせを受け付けました。ありがとうございます！', 'success');
+        form.reset();
+      } else {
+        setStatus(data.error ?? '送信に失敗しました。しばらくしてから再度お試しください。', 'error');
+      }
+    } catch {
+      setStatus('ネットワークエラーが発生しました。時間をおいて再度お試しください。', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する';
+    }
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+    align-items: start;
+    padding-bottom: 5rem;
+  }
+
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+
+  /* Form */
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.1rem;
+  }
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .required { color: #cf222e; margin-left: 0.1em; }
+  :root.dark .required { color: #f85149; }
+
+  input, textarea {
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    color: var(--fg);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+    resize: vertical;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-subtle);
+  }
+
+  input::placeholder, textarea::placeholder { color: var(--fg-subtle); }
+
+  .submit-btn {
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    transition: background var(--transition), opacity var(--transition);
+    margin-top: 0.5rem;
+  }
+
+  .submit-btn:hover { background: var(--accent-hover); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .form-status {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    min-height: 1.4em;
+  }
+
+  .form-status--success { color: var(--success); }
+  .form-status--error { color: #cf222e; }
+  :root.dark .form-status--error { color: #f85149; }
+
+  /* Contact links */
+  .contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-item {
+    display: grid;
+    grid-template-columns: 6rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--canvas);
+    color: var(--fg);
+    text-decoration: none;
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .contact-item:hover {
+    border-color: var(--accent);
+    background: var(--canvas-subtle);
+    text-decoration: none;
+  }
+
+  .contact-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--fg-muted);
+  }
+
+  .contact-value {
+    font-size: 0.8125rem;
+    color: var(--accent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .contact-arrow {
+    color: var(--fg-subtle);
+    font-size: 0.875rem;
+    transition: transform var(--transition);
+  }
+
+  .contact-item:hover .contact-arrow {
+    transform: translateX(3px);
+    color: var(--accent);
+  }
+</style>

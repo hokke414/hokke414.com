@@ -1,0 +1,68 @@
+---
+import { skills } from '../../data/resume';
+---
+
+<section aria-labelledby="skills-title">
+  <div class="container">
+    <h2 id="skills-title" class="section-title">Skills</h2>
+    <div class="skills-grid">
+      {Object.entries(skills).map(([category, items]) => (
+        <div class="skill-group">
+          <h3 class="category-name">{category}</h3>
+          <ul>
+            {items.map((item) => (
+              <li class="skill-item">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .skill-group {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    background: var(--canvas-subtle);
+  }
+
+  .category-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  ul { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+
+  .skill-item {
+    font-size: 0.9rem;
+    color: var(--fg);
+    padding-left: 0.75rem;
+    position: relative;
+  }
+
+  .skill-item::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.7rem;
+    top: 0.1em;
+  }
+</style>

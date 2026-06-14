@@ -1,0 +1,81 @@
+---
+import ArticleCard from '../ArticleCard.astro';
+import { getPublishedPosts } from '../../utils/content';
+import { fetchZennArticles } from '../../utils/zenn';
+
+type WritingItem = {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  category?: string;
+};
+
+const localPosts = await getPublishedPosts();
+const zennPosts = await fetchZennArticles('hokke414');
+
+const localItems: WritingItem[] = localPosts.map((p) => ({
+  href: `/blog/${p.id}`,
+  title: p.data.title,
+  description: p.data.description,
+  pubDate: p.data.pubDate,
+  tags: p.data.tags,
+  category: p.data.category,
+}));
+
+const zennItems: WritingItem[] = zennPosts;
+
+const items = [...localItems, ...zennItems]
+  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
+  .slice(0, 4);
+---
+
+{items.length > 0 && (
+  <section aria-labelledby="recent-writing-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="recent-writing-title" class="section-title">Recent Writing</h2>
+        <a href="/blog" class="view-all">すべて見る →</a>
+      </div>
+      <div class="grid">
+        {items.map((item) => (
+          <ArticleCard
+            href={item.href}
+            title={item.title}
+            description={item.description}
+            pubDate={item.pubDate}
+            tags={item.tags}
+            category={item.category}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  section { padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+
+  .view-all {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+</style>

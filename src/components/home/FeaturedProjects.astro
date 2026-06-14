@@ -1,0 +1,57 @@
+---
+import ProjectCard from '../ProjectCard.astro';
+import { getFeaturedProjects } from '../../utils/content';
+
+const projects = await getFeaturedProjects();
+---
+
+{projects.length > 0 && (
+  <section aria-labelledby="featured-projects-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="featured-projects-title" class="section-title">Featured Projects</h2>
+        <a href="/projects" class="view-all">すべて見る →</a>
+      </div>
+      <div class="grid">
+        {projects.map((p) => (
+          <ProjectCard
+            id={p.id}
+            title={p.data.title}
+            description={p.data.description}
+            tags={p.data.tags}
+            github={p.data.github}
+            demo={p.data.demo}
+            status={p.data.status}
+            featured={p.data.featured}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  section { padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+
+  .view-all {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import FeaturedProjects from '../components/home/FeaturedProjects.astro';
+import RecentWriting from '../components/home/RecentWriting.astro';
+import ActivitiesPreview from '../components/home/ActivitiesPreview.astro';
+import Skills from '../components/home/Skills.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+---
+
+<BaseLayout title="hokke414.com">
+  <Hero />
+  <FeaturedProjects />
+  <RecentWriting />
+  <ActivitiesPreview />
+  <Skills />
+
+  <section class="contact-section" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title" class="section-title">Contact</h2>
+      <p class="contact-desc">お気軽にご連絡ください。お仕事のご依頼・技術的な質問・コラボレーションのご提案など何でも歓迎です。</p>
+      <SocialLinks />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-section {
+    padding: 3.5rem 0;
+  }
+
+  .contact-desc {
+    color: var(--fg-muted);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    max-width: 540px;
+    line-height: 1.7;
+  }
+</style>
