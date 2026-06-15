@@ -1,0 +1,271 @@
+---
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
+
+const services = [
+  {
+    id: 'web',
+    icon: '🌐',
+    title: 'Web制作・運用代行',
+    tagline: '作るだけじゃない、育てるサービス',
+    description: 'ホームページの制作から更新・保守まで、すべておまかせ。月額定額で安心の継続サポートを提供します。',
+    badge: null,
+    href: '/services/web',
+    cta: '詳しく見る →',
+  },
+  {
+    id: 'discord',
+    icon: '💬',
+    title: 'Discordコミュニティ構築支援',
+    tagline: '活発なコミュニティを一緒に作りましょう',
+    description: 'サーバー設計・ルール整備・Bot導入まで、Discord活用を全面サポート。コミュニティ運営の悩みを解決します。',
+    badge: '準備中',
+    href: null,
+    cta: null,
+  },
+  {
+    id: 'notion',
+    icon: '📋',
+    title: 'Notion導入支援',
+    tagline: '情報を整理して、チームの生産性を上げる',
+    description: 'Notionのワークスペース設計・テンプレート作成・チームへの定着支援まで。業務効率化をサポートします。',
+    badge: '準備中',
+    href: null,
+    cta: null,
+  },
+];
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>サービス一覧 – hokke414</title>
+    <meta name="description" content="hokke414が提供するサービス一覧。Web制作・運用代行、Discordコミュニティ構築支援、Notion導入支援。" />
+    <link rel="canonical" href="https://hokke414.com/services/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="nav">
+      <a href="/" class="nav-logo">hokke414.com</a>
+      <a href="/contact" class="nav-cta">お問い合わせ</a>
+    </nav>
+
+    <header class="hero">
+      <p class="hero-eyebrow">SERVICES</p>
+      <h1 class="hero-title">あなたのビジネスを<br />デジタルで加速する</h1>
+      <p class="hero-sub">個人・小規模事業者に向けた、手が届くIT支援サービスを提供しています。</p>
+    </header>
+
+    <main class="main">
+      <div class="grid">
+        {services.map((s) => (
+          <article class={`card ${!s.href ? 'card--disabled' : ''}`}>
+            {s.badge && <span class="badge">{s.badge}</span>}
+            <div class="card-icon">{s.icon}</div>
+            <h2 class="card-title">{s.title}</h2>
+            <p class="card-tagline">{s.tagline}</p>
+            <p class="card-desc">{s.description}</p>
+            {s.href && (
+              <a href={s.href} class="card-link">{s.cta}</a>
+            )}
+          </article>
+        ))}
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>© 2025 hokke414 &nbsp;|&nbsp; <a href="/">ポートフォリオに戻る</a></p>
+    </footer>
+
+    <Analytics />
+    <SpeedInsights />
+  </body>
+</html>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f3ef;
+    color: #1a1a1a;
+    line-height: 1.7;
+    min-height: 100svh;
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #fff;
+    border-bottom: 1px solid #e8e4de;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .nav-cta {
+    background: #2d5a3d;
+    color: #fff;
+    padding: 0.45rem 1.1rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: #1e3f2a; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 5rem 1.5rem 4rem;
+    background: linear-gradient(160deg, #2d5a3d 0%, #1e3f2a 60%, #0f2517 100%);
+    color: #fff;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #86efac;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: #bbf7d0;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* Main */
+  .main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    border: 1px solid #e8e4de;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:not(.card--disabled):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .card--disabled {
+    opacity: 0.65;
+  }
+
+  .badge {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: #f3f0ea;
+    color: #6b6560;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 100px;
+  }
+
+  .card-icon {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: #1a1a1a;
+  }
+
+  .card-tagline {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #2d5a3d;
+    margin-bottom: 0.85rem;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .card-link {
+    display: inline-block;
+    background: #2d5a3d;
+    color: #fff;
+    padding: 0.6rem 1.4rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .card-link:hover { background: #1e3f2a; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: #888;
+    border-top: 1px solid #e8e4de;
+  }
+
+  .footer a {
+    color: #2d5a3d;
+    text-decoration: none;
+  }
+
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .nav { padding: 0.875rem 1rem; }
+    .hero { padding: 3.5rem 1rem 3rem; }
+    .main { padding: 2.5rem 1rem; }
+  }
+</style>
