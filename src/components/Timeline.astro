@@ -26,11 +26,12 @@ const typeLabel: Record<TimelineEntry['type'], string> = {
           <span class="tl-period">{entry.period}</span>
         </div>
         <h3 class="tl-title">{entry.title}</h3>
-        {entry.organization && <p class="tl-org">{entry.organization}</p>}
-        {entry.description && <p class="tl-desc">{entry.description}</p>}
-        {entry.url && (
-          <a class="tl-url" href={entry.url} target="_blank" rel="noopener noreferrer">{entry.url}</a>
+        {entry.organization && (
+          entry.url
+            ? <a class="tl-org tl-org-link" href={entry.url} target="_blank" rel="noopener noreferrer">{entry.organization}</a>
+            : <p class="tl-org">{entry.organization}</p>
         )}
+        {entry.description && <p class="tl-desc">{entry.description}</p>}
       </div>
     </li>
   ))}
@@ -124,13 +125,12 @@ const typeLabel: Record<TimelineEntry['type'], string> = {
     line-height: 1.6;
   }
 
-  .tl-url {
-    font-size: 0.8125rem;
-    color: var(--accent);
-    word-break: break-all;
+  .tl-org-link {
+    display: inline;
+    text-decoration: none;
   }
 
-  .tl-url:hover {
+  .tl-org-link:hover {
     text-decoration: underline;
   }
 </style>

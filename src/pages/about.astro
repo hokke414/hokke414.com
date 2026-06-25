@@ -12,7 +12,7 @@ import { skills } from '../data/resume';
     <div class="container">
       <div class="page-header">
         <h1>About</h1>
-        <p>エンジニア hokke414 のプロフィールです。</p>
+        <p>Ryo Okudera (hokke414) のプロフィールです。</p>
       </div>
 
       <div class="content">
@@ -24,7 +24,7 @@ import { skills } from '../data/resume';
               <img src="/avatar.png" alt="hokke414 のプロフィール画像" width="72" height="72" loading="lazy" decoding="async" />
             </div>
             <div class="profile-body">
-              <h3 class="profile-name">hokke414</h3>
+              <h3 class="profile-name">Ryo Okudera <span class="profile-handle">hokke414</span></h3>
               <p class="profile-role">Computer Science Student / Web Developer</p>
               <div class="profile-bio">
                 <p>
@@ -126,6 +126,12 @@ import { skills } from '../data/resume';
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: -0.01em;
+  }
+
+  .profile-handle {
+    font-size: 0.85em;
+    font-weight: 500;
+    color: var(--fg-muted);
   }
 
   .profile-role { font-size: 0.9375rem; color: var(--fg-muted); margin-top: -0.3rem; }

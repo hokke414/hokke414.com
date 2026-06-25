@@ -6,7 +6,7 @@ import SocialLinks from '../SocialLinks.astro';
   <div class="container">
     <div class="hero-inner">
       <div class="hero-text">
-        <h1 class="name">hokke414</h1>
+        <h1 class="name">Ryo Okudera<span class="handle">hokke414</span></h1>
         <div class="roles">
           <span>Computer Science Student</span>
           <span aria-hidden="true">·</span>
@@ -58,6 +58,16 @@ import SocialLinks from '../SocialLinks.astro';
     letter-spacing: -0.03em;
     color: var(--fg);
     margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+  }
+
+  .handle {
+    font-size: 0.45em;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--fg-muted);
   }
 
   .roles {
