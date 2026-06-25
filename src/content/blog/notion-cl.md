@@ -20,6 +20,7 @@ Notionの使用方法を富山大学生だけでなく同じ年代層の大学�
 
 
 [@hokke414 in Instagram](https://instagram.com/hokke414)
+
 [@hokke414 in X](https://x.com/hokke414)
 
 
