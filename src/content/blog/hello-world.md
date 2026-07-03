@@ -4,7 +4,7 @@ description: 'Nexiaryの前身として公開した際の告知記事です。'
 pubDate: 2025-10-29
 tags:
   - お知らせ
-category: 'misc'
+category: 'お知らせ'
 draft: false
 ---
 
