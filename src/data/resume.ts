@@ -55,6 +55,7 @@ export const skills = {
 export const socials = [
   { label: 'GitHub', url: 'https://github.com/hokke414', icon: 'github' },
   { label: 'Zenn', url: 'https://zenn.dev/hokke414', icon: 'zenn' },
+  { label: 'note', url: 'https://note.com/hokke414', icon: 'note' },
   { label: 'X', url: 'https://x.com/hokke414', icon: 'x' },
   { label: 'Instagram', url: 'https://instagram.com/hokke414', icon: 'instagram' },
   { label: 'Email', url: 'mailto:hokke41499@gmail.com', icon: 'mail' },
