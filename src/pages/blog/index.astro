@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import { getPublishedPosts } from '../../utils/content';
@@ -35,6 +37,12 @@ const allItems: WritingItem[] = [...localItems, ...zennPosts, ...notePosts].sort
 
 const allTags = [...new Set(allItems.flatMap((i) => i.tags))].sort((a, b) =>
   a.localeCompare(b, 'ja'),
+);
+
+// Vercel CDN: 30分キャッシュ、最大24時間 stale-while-revalidate
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=1800, stale-while-revalidate=86400',
 );
 ---
 
