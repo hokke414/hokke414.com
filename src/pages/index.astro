@@ -1,5 +1,12 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=1800, stale-while-revalidate=86400',
+);
 import Hero from '../components/home/Hero.astro';
 import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import RecentWriting from '../components/home/RecentWriting.astro';

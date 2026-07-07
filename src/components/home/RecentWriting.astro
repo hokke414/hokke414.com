@@ -2,6 +2,7 @@
 import ArticleCard from '../ArticleCard.astro';
 import { getPublishedPosts } from '../../utils/content';
 import { fetchZennArticles } from '../../utils/zenn';
+import { fetchNoteArticles } from '../../utils/note';
 
 type WritingItem = {
   href: string;
@@ -13,7 +14,10 @@ type WritingItem = {
 };
 
 const localPosts = await getPublishedPosts();
-const zennPosts = await fetchZennArticles('hokke414');
+const [zennPosts, notePosts] = await Promise.all([
+  fetchZennArticles('hokke414'),
+  fetchNoteArticles('hokke414'),
+]);
 
 const localItems: WritingItem[] = localPosts.map((p) => ({
   href: `/blog/${p.id}`,
@@ -21,12 +25,10 @@ const localItems: WritingItem[] = localPosts.map((p) => ({
   description: p.data.description,
   pubDate: p.data.pubDate,
   tags: p.data.tags,
-  category: p.data.category,
+  category: p.data.category !== 'misc' ? p.data.category : undefined,
 }));
 
-const zennItems: WritingItem[] = zennPosts;
-
-const items = [...localItems, ...zennItems]
+const items = [...localItems, ...zennPosts, ...notePosts]
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
   .slice(0, 4);
 ---
