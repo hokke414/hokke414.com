@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PersonJsonLd from '../components/PersonJsonLd.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
@@ -10,21 +11,24 @@ interface Props {
   description?: string;
   canonical?: string;
   ogType?: 'website' | 'article';
+  ogImage?: string;
   pubDate?: Date;
   noindex?: boolean;
 }
 
 const {
   title,
-  description = 'hokke414のポートフォリオ兼技術ブログ。Web開発・個人開発・コミュニティ活動を発信しています。',
+  description = 'Ryo Okudera（hokke414）のポートフォリオ兼技術ブログ。Web開発・個人開発・コミュニティ活動を発信しています。',
   canonical = Astro.url.href,
   ogType = 'website',
+  ogImage = '/avatar.png',
   pubDate,
   noindex = false,
 } = Astro.props;
 
 const siteName = 'hokke414.com';
 const fullTitle = title === siteName ? title : `${title} – ${siteName}`;
+const absoluteOgImage = new URL(ogImage, Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
@@ -42,6 +46,7 @@ const fullTitle = title === siteName ? title : `${title} – ${siteName}`;
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Ryo Okudera (hokke414)" />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
 
@@ -51,18 +56,26 @@ const fullTitle = title === siteName ? title : `${title} – ${siteName}`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content={absoluteOgImage} />
     {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <meta name="twitter:site" content="@hokke414" />
+    <meta name="twitter:creator" content="@hokke414" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- RSS -->
     <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+
+    <!-- 構造化データ: Ryo Okudera = hokke414 の同一人物性、サイト情報 -->
+    <PersonJsonLd />
   </head>
   <body>
     <Header />

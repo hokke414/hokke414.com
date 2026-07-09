@@ -1,0 +1,37 @@
+---
+import { socials } from '../data/resume';
+
+const siteUrl = 'https://hokke414.com';
+const sameAs = socials
+  .filter((s) => !s.url.startsWith('mailto:'))
+  .map((s) => s.url);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${siteUrl}/#person`,
+      name: 'Ryo Okudera',
+      alternateName: 'hokke414',
+      url: siteUrl,
+      image: `${siteUrl}/avatar.png`,
+      jobTitle: 'Web Developer',
+      description:
+        '富山大学工学部知能情報工学コースに在籍する学生エンジニア。Notion Campus Leader。',
+      sameAs,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'hokke414.com',
+      inLanguage: 'ja',
+      author: { '@id': `${siteUrl}/#person` },
+      publisher: { '@id': `${siteUrl}/#person` },
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />

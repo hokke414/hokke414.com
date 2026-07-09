@@ -28,7 +28,7 @@ const localItems: WritingItem[] = localPosts.map((p) => ({
   category: p.data.category !== 'misc' ? p.data.category : undefined,
 }));
 
-const items = [...localItems, ...zennPosts, ...notePosts]
+const items: WritingItem[] = [...localItems, ...zennPosts, ...notePosts]
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
   .slice(0, 4);
 ---
