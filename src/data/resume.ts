@@ -11,7 +11,7 @@ export const timeline: TimelineEntry[] = [
   {
     period: '2026.06.25',
     type: 'organization',
-    title: 'Notionキャンパスリーダー 所属',
+    title: 'Notionキャンパスリーダー 就任',
     organization: 'Notion Campus Leader Program',
     url: "https://notion.notion.site/Notion-dff76cf4f6b14bbc9570623a5de5ae0e",
   },

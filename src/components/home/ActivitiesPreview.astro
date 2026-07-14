@@ -17,13 +17,16 @@ const activities = (await getAllActivities())
       <div class="grid">
         {activities.map((a) => (
           <ActivityCard
+            href={`/activities/${a.id}`}
             title={a.data.title}
             description={a.data.description}
             date={a.data.date}
             endDate={a.data.endDate}
             type={a.data.type}
+            organization={a.data.organization}
             role={a.data.role}
             links={a.data.links}
+            image={a.data.image}
           />
         ))}
       </div>

@@ -1,8 +1,8 @@
 # hokke414.com
 
-> Ryo Okudera（読み: おくでら りょう、ハンドルネーム: hokke414）の個人サイト。富山大学工学部知能情報工学コースに在籍する学生エンジニア。Notion Campus Leader。Web開発・個人開発・コミュニティ活動を発信している。
+> Ryo Okudera（漢字：奥寺 諒大、読み: おくでら りょう、ハンドルネーム: hokke414）の個人サイト。富山大学工学部知能情報工学コースに在籍する学生エンジニア。Notion Campus Leader。Web開発・個人開発・コミュニティ活動を発信している。
 
-Ryo Okudera と hokke414 は同一人物です。GitHub・X (Twitter)・Zenn・note・Instagram のすべてで hokke414 というユーザー名を使用しています。
+Ryo Okudera と hokke414 は同一人物です。GitHub・X (Twitter)・Zenn・note・Instagram 等で hokke414 というユーザー名を使用しています。
 
 ## Profile
 
@@ -27,3 +27,5 @@ Ryo Okudera と hokke414 は同一人物です。GitHub・X (Twitter)・Zenn・n
 - Zenn: https://zenn.dev/hokke414
 - note: https://note.com/hokke414
 - Instagram: https://instagram.com/hokke414
+
+その他、https:/hokke414.com を被リンクとしているものは本人ではありません。

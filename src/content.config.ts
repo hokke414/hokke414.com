@@ -37,7 +37,9 @@ const activities = defineCollection({
     date: z.coerce.date(),
     endDate: z.coerce.date().optional(),
     type: z.enum(['community', 'event', 'oss', 'hackathon', 'other']),
+    organization: z.string().optional(),
     role: z.string().optional(),
+    image: z.string().optional(),
     links: z
       .array(z.object({ label: z.string(), url: z.string() }))
       .optional(),

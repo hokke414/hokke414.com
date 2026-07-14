@@ -8,13 +8,13 @@ const activities = await getAllActivities();
 
 <BaseLayout
   title="Activities"
-  description="hokke414のコミュニティ活動一覧。イベント登壇・勉強会・ハッカソンなどの活動記録です。"
+  description="hokke414のコミュニティ活動一覧。イベント参加・登壇・勉強会・ハッカソンなどの活動記録です。"
 >
   <div class="page-wrap">
     <div class="container">
       <div class="page-header">
         <h1>Activities</h1>
-        <p>技術コミュニティへの参加・登壇・運営などの活動記録です。</p>
+        <p>イベント・コミュニティ活動への参加・登壇・運営などの記録です。</p>
       </div>
 
       {activities.length === 0 ? (
@@ -24,13 +24,16 @@ const activities = await getAllActivities();
           {activities.map((a) => (
             <div class="grid-item">
               <ActivityCard
+                href={`/activities/${a.id}`}
                 title={a.data.title}
                 description={a.data.description}
                 date={a.data.date}
                 endDate={a.data.endDate}
                 type={a.data.type}
+                organization={a.data.organization}
                 role={a.data.role}
                 links={a.data.links}
+                image={a.data.image}
               />
             </div>
           ))}
