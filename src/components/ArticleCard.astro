@@ -8,9 +8,11 @@ interface Props {
   pubDate: Date;
   tags?: string[];
   category?: string;
+  source?: 'blog' | 'zenn' | 'note';
+  sourceLabel?: string;
 }
 
-const { href, title, description, pubDate, tags = [], category } = Astro.props;
+const { href, title, description, pubDate, tags = [], category, source, sourceLabel } = Astro.props;
 const isExternal = href.startsWith('http');
 ---
 
@@ -23,7 +25,9 @@ const isExternal = href.startsWith('http');
   >
     <div class="card-meta">
       {category && <span class="category">{category}</span>}
-      {isExternal && <span class="external-badge">↗ 外部</span>}
+      {source && source !== 'blog' && (
+        <span class:list={['source-badge', `source-${source}`]}>{sourceLabel}</span>
+      )}
       <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
     </div>
     <h3 class="card-title">{title}</h3>
@@ -82,16 +86,19 @@ const isExternal = href.startsWith('http');
     font-size: 0.75rem;
   }
 
-  .external-badge {
+  .source-badge {
     font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--fg-subtle);
-    background: var(--canvas-inset);
-    border: 1px solid var(--border);
+    font-weight: 700;
     border-radius: var(--radius);
     padding: 0.1rem 0.4rem;
     letter-spacing: 0.02em;
   }
+
+  .source-zenn { background: #dbeafe; color: #1e5fbf; }
+  .source-note { background: #dcfce7; color: #23663f; }
+
+  :root.dark .source-zenn { background: #1c2e4a; color: #7fb3ff; }
+  :root.dark .source-note { background: #14291e; color: #7fe0ab; }
 
   .card-title {
     font-size: 1rem;

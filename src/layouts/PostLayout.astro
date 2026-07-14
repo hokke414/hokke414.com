@@ -10,18 +10,26 @@ interface Props {
   updatedDate?: Date;
   tags?: string[];
   category?: string;
+  image?: string;
 }
 
-const { title, description, pubDate, updatedDate, tags = [], category } = Astro.props;
+const { title, description, pubDate, updatedDate, tags = [], category, image } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} ogType="article" pubDate={pubDate}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  pubDate={pubDate}
+  ogImage={image}
+>
   <ArticleJsonLd
     title={title}
     description={description}
     pubDate={pubDate}
     updatedDate={updatedDate}
     tags={tags}
+    image={image}
   />
   <article class="post-wrap">
     <div class="container">

@@ -5,10 +5,12 @@ interface Props {
   pubDate: Date;
   updatedDate?: Date;
   tags?: string[];
+  image?: string;
 }
 
-const { title, description, pubDate, updatedDate, tags = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, tags = [], image } = Astro.props;
 const siteUrl = 'https://hokke414.com';
+const absoluteImage = new URL(image || '/avatar.png', siteUrl).href;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -22,7 +24,7 @@ const jsonLd = {
   keywords: tags.join(', ') || undefined,
   author: { '@id': `${siteUrl}/#person` },
   publisher: { '@id': `${siteUrl}/#person` },
-  image: `${siteUrl}/avatar.png`,
+  image: absoluteImage,
   mainEntityOfPage: { '@type': 'WebPage', '@id': Astro.url.href },
 };
 ---

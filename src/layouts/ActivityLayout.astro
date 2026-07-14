@@ -29,7 +29,13 @@ const periodStr = endDate
   : formatDate(date);
 ---
 
-<BaseLayout title={title} description={description} ogType="article" pubDate={date}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  pubDate={date}
+  ogImage={image}
+>
   <article class="post-wrap">
     <div class="container">
       <header class="post-header">

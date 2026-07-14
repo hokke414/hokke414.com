@@ -7,6 +7,8 @@ import { getPublishedPosts } from '../../utils/content';
 import { fetchZennArticles } from '../../utils/zenn';
 import { fetchNoteArticles } from '../../utils/note';
 
+type Source = 'blog' | 'zenn' | 'note';
+
 type WritingItem = {
   href: string;
   title: string;
@@ -14,6 +16,13 @@ type WritingItem = {
   pubDate: Date;
   tags: string[];
   category?: string;
+  source: Source;
+};
+
+const sourceLabel: Record<Source, string> = {
+  blog: 'hokke414.com',
+  zenn: 'Zenn',
+  note: 'note',
 };
 
 const localPosts = await getPublishedPosts();
@@ -29,9 +38,13 @@ const localItems: WritingItem[] = localPosts.map((p) => ({
   pubDate: p.data.pubDate,
   tags: p.data.tags,
   category: p.data.category !== 'misc' ? p.data.category : undefined,
+  source: 'blog',
 }));
 
-const allItems: WritingItem[] = [...localItems, ...zennPosts, ...notePosts].sort(
+const zennItems: WritingItem[] = zennPosts.map((a) => ({ ...a, source: 'zenn' }));
+const noteItems: WritingItem[] = notePosts.map((a) => ({ ...a, source: 'note' }));
+
+const allItems: WritingItem[] = [...localItems, ...zennItems, ...noteItems].sort(
   (a, b) => b.pubDate.getTime() - a.pubDate.getTime(),
 );
 
@@ -58,6 +71,13 @@ Astro.response.headers.set(
       </div>
 
       <div class="toolbar">
+        <div class="source-bar" role="group" aria-label="投稿元で絞り込み">
+          <button class="source-btn active" data-source="" type="button">すべて</button>
+          <button class="source-btn" data-source="blog" type="button">hokke414.com</button>
+          <button class="source-btn" data-source="zenn" type="button">Zenn</button>
+          <button class="source-btn" data-source="note" type="button">note</button>
+        </div>
+
         <div class="toolbar-top">
           <input
             id="search-input"
@@ -102,6 +122,7 @@ Astro.response.headers.set(
               data-tags={item.tags.join(',')}
               data-title={item.title.toLowerCase()}
               data-desc={item.description.toLowerCase()}
+              data-source={item.source}
             >
               <ArticleCard
                 href={item.href}
@@ -110,6 +131,8 @@ Astro.response.headers.set(
                 pubDate={item.pubDate}
                 tags={item.tags}
                 category={item.category}
+                source={item.source}
+                sourceLabel={sourceLabel[item.source]}
               />
             </div>
           ))}
@@ -128,10 +151,12 @@ Astro.response.headers.set(
   const tagToggleLabel = document.getElementById('tag-toggle-label')!;
   const tagToggleChevron = document.getElementById('tag-toggle-chevron')!;
   const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const sourceBtns = document.querySelectorAll<HTMLButtonElement>('.source-btn');
   const items = document.querySelectorAll<HTMLElement>('.grid-item');
   const noResults = document.getElementById('no-results')!;
 
   let activeTag = '';
+  let activeSource = '';
   let query = '';
 
   // タグパネルの開閉
@@ -148,9 +173,11 @@ Astro.response.headers.set(
       const tags = item.dataset.tags ?? '';
       const title = item.dataset.title ?? '';
       const desc = item.dataset.desc ?? '';
+      const source = item.dataset.source ?? '';
       const matchTag = !activeTag || tags.split(',').includes(activeTag);
+      const matchSource = !activeSource || source === activeSource;
       const matchSearch = !query || title.includes(query) || desc.includes(query);
-      const show = matchTag && matchSearch;
+      const show = matchTag && matchSource && matchSearch;
       item.style.display = show ? '' : 'none';
       if (show) visible++;
     });
@@ -167,6 +194,14 @@ Astro.response.headers.set(
         tagToggleLabel.textContent = activeTag ? `タグ: ${activeTag}` : 'タグ検索';
       }
 
+      applyFilters();
+    });
+  });
+
+  sourceBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeSource = btn.dataset.source ?? '';
+      sourceBtns.forEach((b) => b.classList.toggle('active', b === btn));
       applyFilters();
     });
   });
@@ -190,6 +225,33 @@ Astro.response.headers.set(
     align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
+  }
+
+  .source-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .source-btn {
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--fg-muted);
+    background: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: 2em;
+    padding: 0.3rem 0.85rem;
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+  }
+
+  .source-btn:hover { color: var(--fg); border-color: var(--fg-muted); }
+
+  .source-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
   }
 
   .search-input {

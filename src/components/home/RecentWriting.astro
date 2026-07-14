@@ -4,6 +4,8 @@ import { getPublishedPosts } from '../../utils/content';
 import { fetchZennArticles } from '../../utils/zenn';
 import { fetchNoteArticles } from '../../utils/note';
 
+type Source = 'blog' | 'zenn' | 'note';
+
 type WritingItem = {
   href: string;
   title: string;
@@ -11,6 +13,13 @@ type WritingItem = {
   pubDate: Date;
   tags: string[];
   category?: string;
+  source: Source;
+};
+
+const sourceLabel: Record<Source, string> = {
+  blog: 'hokke414.com',
+  zenn: 'Zenn',
+  note: 'note',
 };
 
 const localPosts = await getPublishedPosts();
@@ -26,9 +35,13 @@ const localItems: WritingItem[] = localPosts.map((p) => ({
   pubDate: p.data.pubDate,
   tags: p.data.tags,
   category: p.data.category !== 'misc' ? p.data.category : undefined,
+  source: 'blog',
 }));
 
-const items: WritingItem[] = [...localItems, ...zennPosts, ...notePosts]
+const zennItems: WritingItem[] = zennPosts.map((a) => ({ ...a, source: 'zenn' }));
+const noteItems: WritingItem[] = notePosts.map((a) => ({ ...a, source: 'note' }));
+
+const items: WritingItem[] = [...localItems, ...zennItems, ...noteItems]
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
   .slice(0, 4);
 ---
@@ -49,6 +62,8 @@ const items: WritingItem[] = [...localItems, ...zennPosts, ...notePosts]
             pubDate={item.pubDate}
             tags={item.tags}
             category={item.category}
+            source={item.source}
+            sourceLabel={sourceLabel[item.source]}
           />
         ))}
       </div>
