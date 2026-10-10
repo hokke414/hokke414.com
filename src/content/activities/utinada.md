@@ -4,10 +4,10 @@ description: ''
 date: 2026-07-12
 type: event
 organization: '北プロ'
-image: '/utinada/IMG_4448.jpg'
+image: '/blog/utinada/IMG_4448.jpg'
 ---
 
-![イベントのチラシ](/utinada/IMG_4442.jpg)
+![イベントのチラシ](/blog/utinada/IMG_4442.jpg)
 
 
 [うちなだビーチ大作戦！～海をきれいにして、あそびつくそう～ - Instagram](https://www.instagram.com/p/Dahp9mOk1Sp/)
@@ -46,7 +46,7 @@ image: '/utinada/IMG_4448.jpg'
 
 <br>
 
-![内灘海岸の様子](/utinada/IMG_4447.jpg)
+![内灘海岸の様子](/blog/utinada/IMG_4447.jpg)
 
 　内灘海岸、初めて来ましたが想像よりかなり大きくてびっくりしました。まず海に久しぶりに来たというのもありますが、個人的にもかなり楽しめましたしいい交流の機会になったかと思います。
 

@@ -23,5 +23,4 @@ npm-debug.log*
 
 # Editor / tooling
 .claude
-CLAUDE.md
-WORKFLOW.md
+.md/
