@@ -3,7 +3,7 @@ title: AstroBlogTemplate
 description: Astro.jsを使用したブログテンプレート
 tags: [Astro, TypeScript, CSS, Vercel]
 github: https://github.com/hokke414/AstroBlogTemplate
-featured: true
+featured: false
 status: active
 startDate: 2026-05-21
 ---
